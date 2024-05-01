@@ -21,7 +21,7 @@ class Admin::OrdersController < AdminController
 
   # POST /admin/orders or /admin/orders.json
   def create
-    @admin_order = Admin::Order.new(admin_order_params)
+    @admin_order = Order.new(admin_order_params)
 
     respond_to do |format|
       if @admin_order.save
