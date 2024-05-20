@@ -6,7 +6,7 @@
     <% end %>
   </div>
 
-  <div class="flex flex-col items-start max-w-sm">
+  <div data-controller="products" data-product-product-value="<%= @product.to_json%>"class="flex flex-col items-start max-w-sm">
     <h1 class="font-bold text-4xl uppercase"><%= @product.name %></h1>
     <p class="text-2xl mt-4">$<%= (@product.price/100.0).to_s %></p>
     <p class="text-md py-8"><%= @product.description %></p>
@@ -16,9 +16,11 @@
         <% if stock.amount > 0 %>
           <button value="<%= stock.size %>" class="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 focus:outline-none focus:ring-gray-500 focus:ring-oppacity-50"><%= stock.size %></button>
         <% else %>
-          <button disabled_value="<%= stock.size %>" class="disabled:bg-gray-400 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 focus:outline-none focus:ring-gray-500 focus:ring-oppacity-50"><%= stock.size %></button>
+          <button disabled_value="<%= stock.size %>" class="disabled:bg-gray-400 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 focus:outline-none focus:ring-gray-500 focus:ring-opacity-50"><%= stock.size %></button>
         <% end %>
       <% end %>
     </div>
+    <button class="inline-flex items-center justify-center px-5 py-3 border border-transparent font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+    Add to Cart</button>
   </div>
 </div>
