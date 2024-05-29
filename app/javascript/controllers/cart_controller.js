@@ -3,6 +3,8 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="cart"
 export default class extends Controller {
   initialize() {
+
+    console.log("cart controller initialized")
     const cart = JSON.parse(localStorage.getItem("cart"))
     if (!cart) {
       return
@@ -18,6 +20,7 @@ export default class extends Controller {
         ${item.size} - Quantity: ${item.quantity}`
         const deleteButton = document.createElement("button")
         deleteButton.innerText = "Remove"
+
         deleteButton.value = item.div
         deleteButton.classList.add("bg-gray-500", "rounded", "text-white",
          "px-2", "py-1", "ml-2")
@@ -25,10 +28,58 @@ export default class extends Controller {
          div.appendChild(deleteButton)
          this.element.prepend(div)
         }
+
         const totalEl = document.createElement("div")
         totalEl.innerText = `Total: $${total/100.0}`
-        let totalController = document.getElementById("total")
-        totalController.appendChild(totalEl)
+        let totalContainer = document.getElementById("total")
+        totalContainer.appendChild(totalEl)
+      }
 
+      clear() {
+        localStorage.removeItem("cart")
+        window.location.reload()
+      }
+
+      removeFromCart(event) {
+        const cart = JSON.parse(localStorage.getItem("cart"))
+        const id  = event.target.value
+        const index = cart.findIndex(item => item.id === id )
+        cart.splice(index, 1)
+        localStorage.setItem("cart", JSON.stringify(cart))
+        window.location.reload()
+      }
+
+      checkout() {
+        
+        const cart = JSON.parse(localStorage.getItem("cart"))
+    const payload = {
+      authenticity_token: "",
+      cart: cart
+    }
+    const csrfToken = document.querySelector("[name='csrf-token']").content
+
+    fetch("/checkout", {
+      method: "POST",
+      headers: {
+        "content-Type": "application/json",
+        "X-CSRF-Token": csrfToken
+      },
+      body: JSON.stringify(payload)
+    }).then(response => {
+
+        if (response.ok) {
+          response.json().then(body => {
+            window.location.href = body.url
+          })
+        } else {
+          response.json().then(body => {
+            const errorEL = document.createElement("div")
+            errorEL.innerText = `There was an error processing your order. ${body.error}`
+            let errorContainer = document.getElementById("errorContainer")
+            errorContainer.appendChild(errorEl)
+          })
+        }
+
+    })
   }
 }
