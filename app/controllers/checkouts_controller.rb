@@ -1,5 +1,5 @@
 class CheckoutsController < ApplicationController
   def create
-    puts "hit create"
+    stripe_secret_key
   end
 end
